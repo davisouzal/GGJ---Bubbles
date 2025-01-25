@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IPlayer : IActivatable
+public interface IPlayer : IActivatable, IEntity
 {
     void playerMovement(){}
 }

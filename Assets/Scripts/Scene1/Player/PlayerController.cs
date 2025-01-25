@@ -1,24 +1,28 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, IPlayer
+public class PlayerController: Entity, IPlayer
 {
     // Declara��es para o proj�til
     public GameObject projectilePrefab;
     private Vector3 projectileOriginalPosition;
     public float projectileSpeed = 10f;
-    public float chargeTime = 1f;
-    public float cooldownTime = 5f;
+    public float projChargeTime = 1f;
+    public float projCooldownTime = 5f;
+    private float projChargeTimer = 0f; // Temporizador para o carregamento
+    private bool projIsCharging = false; // Verifica se o jogador est� carregando a habilidade
+    private bool projIsOnCooldown = false; // Verifica se a habilidade est� em recarga
 
-    // Declara��es para os timers
-    private float chargeTimer = 0f; // Temporizador para o carregamento
-    private bool isCharging = false; // Verifica se o jogador est� carregando a habilidade
-    private bool isOnCooldown = false; // Verifica se a habilidade est� em recarga
+    // Declarações para a bolha
+    public GameObject bubblePrefab; // Prefab da bolha
+    public float bubbleCooldownTime = 5f; // Tempo de recarga da bolha
+    private bool bubbleIsOnCooldown = false; // Verifica se a habilidade da bolha está em recarga
 
     // Update is called once per frame
     void Update()
     {
         playerMovement();
         castAbilityProjectile();
+        castAbilityBubble();
     }
 
     void playerMovement()
@@ -33,45 +37,69 @@ public class PlayerController : MonoBehaviour, IPlayer
 
     void castAbilityProjectile()
     {
-        if (Input.GetMouseButton(0) && !isOnCooldown)
+        if (Input.GetMouseButton(0) && !projIsOnCooldown)
         {
-            isCharging = true;
-            chargeTimer += Time.deltaTime;
+            projIsCharging = true;
+            projChargeTimer += Time.deltaTime;
 
-            if (chargeTimer >= chargeTime)
+            if (projChargeTimer >= projChargeTime)
             {
                 LaunchProjectile();
-                chargeTimer = 0f;
-                isCharging = false;
-                isOnCooldown = true;
-                Invoke(nameof(ResetCooldown), cooldownTime); // Inicia o cooldown
+                projChargeTimer = 0f;
+                projIsCharging = false;
+                projIsOnCooldown = true;
+                Invoke(nameof(ResetProjectileCooldown), projCooldownTime); // Inicia o cooldown
             }
         }
 
-        if (Input.GetMouseButtonUp(0) && isCharging)
+        if (Input.GetMouseButtonUp(0) && projIsCharging)
         {
-            isCharging = false;
-            chargeTimer = 0f;
+            projIsCharging = false;
+            projChargeTimer = 0f;
         }
     }
 
     private void LaunchProjectile()
     {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition); // Posição do mouse no mundo
+        mousePosition.z = 0;
         projectileOriginalPosition = transform.position;
-        projectileOriginalPosition.x += 1;
         projectileOriginalPosition.y += 0.2f;
-        GameObject projectile = Instantiate(projectilePrefab, projectileOriginalPosition, Quaternion.identity);
+        projectileOriginalPosition.x = (mousePosition.x < transform.position.x) ? projectileOriginalPosition.x - 1 : projectileOriginalPosition.x + 1;
+        GameObject projectileObject = Instantiate(projectilePrefab, projectileOriginalPosition, Quaternion.identity);
 
-        Rigidbody2D rb = projectile.GetComponent<Rigidbody2D>();
-        if (rb != null)
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+
+        if (projectile != null)
         {
-            rb.linearVelocity = Vector2.right * projectileSpeed; // Altere a dire��o conforme necess�rio
+            projectile.Owner = gameObject;
+            Vector2 direction = (mousePosition.x < transform.position.x) ? Vector2.left : Vector2.right;
+            projectile.setProjectile(direction, 10f, gameObject);
         }
     }
 
-    private void ResetCooldown()
+    private void ResetProjectileCooldown()
     {
-        isOnCooldown = false;
+        projIsOnCooldown = false;
     }
 
+    void castAbilityBubble()
+    {
+        if (Input.GetMouseButtonDown(1) && !bubbleIsOnCooldown) // Botão direito do mouse
+        {
+            ActivateBubble();
+            bubbleIsOnCooldown = true;
+            Invoke(nameof(ResetBubbleCooldown), bubbleCooldownTime); // Inicia o cooldown da bolha
+        }
+    }
+
+    private void ActivateBubble()
+    {
+        GameObject bubble = Instantiate(bubblePrefab, transform.position, Quaternion.identity);
+        bubble.transform.parent = transform;
+    }
+    private void ResetBubbleCooldown()
+    {
+        bubbleIsOnCooldown = false;
+    }
 }
