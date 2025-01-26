@@ -16,17 +16,19 @@ public class LeverX : MonoBehaviour
     private bool isPlayerNearby = false;
 
     public GameObject Door;
-    public Vector3 originalDoorPosition; // A posição original da porta no eixo X
+    public GameObject interactionCanvas;
+    public Vector3 originalDoorPosition;
     private DoorStatus doorStatus = DoorStatus.Closed;
-    public Vector2 maxDoorOffset; // O deslocamento máximo no eixo X.
-    public Sprite leverActiveSprite; // Sprite ativado.
+    public Vector2 maxDoorOffset;
+    public Sprite leverActiveSprite;
     public Sprite leverInactiveSprite;
     private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        originalDoorPosition = Door.transform.position; // Posição inicial no eixo X
+        originalDoorPosition = Door.transform.position;
+        interactionCanvas.SetActive(false); // Garantir que o Canvas comece desativado
     }
 
     void Update()
@@ -50,10 +52,8 @@ public class LeverX : MonoBehaviour
 
         if (doorStatus == DoorStatus.Opening)
         {
-            // Movimentação da porta no eixo X
             Door.transform.Translate(0, -0.01f, 0);
 
-            // Verificar se ultrapassou o limite de abertura no eixo X
             if (Door.transform.position.x > originalDoorPosition.x + maxDoorOffset.x)
             {
                 doorStatus = DoorStatus.Opened;
@@ -62,10 +62,8 @@ public class LeverX : MonoBehaviour
 
         if (doorStatus == DoorStatus.Closing)
         {
-            // Movimentação da porta no eixo X
             Door.transform.Translate(0, 0.01f, 0);
 
-            // Verificar se a porta voltou à posição original no eixo X
             if (Door.transform.position.x < originalDoorPosition.x)
             {
                 doorStatus = DoorStatus.Closed;
@@ -78,6 +76,7 @@ public class LeverX : MonoBehaviour
         if (collision.transform.gameObject.GetComponent<IPlayer>() != null)
         {
             isPlayerNearby = true;
+            interactionCanvas.SetActive(true);
         }
     }
 
@@ -86,6 +85,7 @@ public class LeverX : MonoBehaviour
         if (collision.transform.gameObject.GetComponent<IPlayer>() != null)
         {
             isPlayerNearby = false;
+            interactionCanvas.SetActive(false);
         }
     }
-}   
+}
