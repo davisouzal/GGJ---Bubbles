@@ -82,6 +82,10 @@ public class PlayerController: Entity, IPlayer
         {
             inGround = true;
         }
+        if (collision.gameObject.TryGetComponent(out IProjectile projectile) && projectile.Owner.name != gameObject.name)
+        {
+            TakeDamage(1);
+        }
     }
 
     void castAbilityProjectile()
@@ -164,13 +168,5 @@ public class PlayerController: Entity, IPlayer
     public void Die()
     {
         Destroy(gameObject);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.TryGetComponent(out IProjectile projectile) && projectile.Owner.name != gameObject.name)
-        {
-            TakeDamage(1);
-        }
     }
 }
