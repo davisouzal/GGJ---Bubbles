@@ -12,7 +12,7 @@ public class Projectile : MonoBehaviour, IProjectile
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.linearVelocity = -startDirection * projSpeed;
+            rb.linearVelocity = - startDirection * projSpeed;
         }
     }
 
