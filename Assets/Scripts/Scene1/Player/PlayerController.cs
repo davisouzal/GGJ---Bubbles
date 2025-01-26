@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController: Entity, IPlayer
 {
@@ -82,7 +83,7 @@ public class PlayerController: Entity, IPlayer
         {
             inGround = true;
         }
-        if (collision.gameObject.TryGetComponent(out IProjectile projectile) && projectile.Owner.name != gameObject.name)
+        if (collision.gameObject.TryGetComponent(out IProjectile projectile))
         {
             TakeDamage(1);
         }
@@ -168,5 +169,7 @@ public class PlayerController: Entity, IPlayer
     public void Die()
     {
         Destroy(gameObject);
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 }
