@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IEnemy
 {
-    public GameObject projectilePrefab; // Prefab do projétil
-    public float projSpeed = 5f;        // Velocidade do projétil
+    public GameObject projectilePrefab; // Prefab do projï¿½til
+    public float projSpeed = 5f;        // Velocidade do projï¿½til
     public bool playerInSight = false;
     
     public float shootCooldown = 5f;
@@ -25,9 +25,8 @@ public class Enemy : MonoBehaviour, IEnemy
             Vector3 projStartPosition = transform.position;
             projStartPosition.x += 2;
             GameObject projectileObject = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-            Projectile projectile = projectileObject.GetComponent<Projectile>();
 
-            if (projectile != null)
+            if (projectileObject.TryGetComponent(out Projectile projectile))
             {
                 projectile.setProjectile(direction, projSpeed, gameObject);
             }

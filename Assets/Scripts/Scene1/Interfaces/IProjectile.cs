@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IProjectile
 {
-    GameObject Owner { get; set; }
+    void setProjectile(Vector2 direction, float speed, GameObject owner);
 }
