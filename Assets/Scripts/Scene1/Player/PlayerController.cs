@@ -19,7 +19,8 @@ public class PlayerController: Entity, IPlayer
     private Animator anim;
     private Rigidbody2D rb;
     public bool inGround = true;
-    // Update is called once per frame
+    
+    public int playerHealth = 2;
 
     void Start()
     {
@@ -33,6 +34,10 @@ public class PlayerController: Entity, IPlayer
         castAbilityProjectile();
         castAbilityBubble();    
         Jump();
+        if(playerHealth <= 0)
+        {
+            Die();
+        }
     }
      
     void playerMovement()
@@ -116,8 +121,8 @@ public class PlayerController: Entity, IPlayer
 
         if (projectile != null)
         {
-            projectile.Owner = gameObject;
-            Vector2 direction = (mousePosition.x < transform.position.x) ? Vector2.left : Vector2.right;
+
+            Vector2 direction = (mousePosition.x < transform.position.x) ? Vector2.right : Vector2.left;
             projectile.setProjectile(direction, 10f, gameObject);
         }
     }
@@ -145,5 +150,27 @@ public class PlayerController: Entity, IPlayer
     private void ResetBubbleCooldown()
     {
         bubbleIsOnCooldown = false;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        playerHealth -= damage;
+        if (playerHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out IProjectile projectile) && projectile.Owner.name != gameObject.name)
+        {
+            TakeDamage(1);
+        }
     }
 }
