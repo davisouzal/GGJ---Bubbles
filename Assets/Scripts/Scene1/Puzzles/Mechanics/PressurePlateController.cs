@@ -26,7 +26,6 @@ public class PressurePlateController : MonoBehaviour
             inTriggerContact = true;
         }
     }
-
     private void OnCollisionExit2D(Collision2D collision)
     {
         if(collision.transform.name == "Player")
