@@ -28,6 +28,6 @@ public class MenuManager : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
-        Debug.Log("Sai do jogo!");
+        Debug.Log("Sai do jogo!");  
     }
 }

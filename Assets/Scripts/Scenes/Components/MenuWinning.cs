@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuWinning : MonoBehaviour
 {
-    public string menuSceneName = "Cena 0";
+    public string menuSceneName = "Introducao";
     // Método para ir ao menu principal
     public void LoadMenu()
     {
