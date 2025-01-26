@@ -16,22 +16,66 @@ public class PlayerController: Entity, IPlayer
     public GameObject bubblePrefab; // Prefab da bolha
     public float bubbleCooldownTime = 5f; // Tempo de recarga da bolha
     private bool bubbleIsOnCooldown = false; // Verifica se a habilidade da bolha está em recarga
-
+    private Animator anim;
+    private Rigidbody2D rb;
+    public bool inGround = true;
     // Update is called once per frame
+
+    void Start()
+    {
+        // Obter referências ao Rigidbody2D e ao Animator
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+    }
     void Update()
     {
         playerMovement();
         castAbilityProjectile();
-        castAbilityBubble();
+        castAbilityBubble();    
+        Jump();
     }
-
+     
     void playerMovement()
     {
-        GetComponent<Rigidbody2D>().linearVelocity = new Vector2(Input.GetAxis("Horizontal") * 5, GetComponent<Rigidbody2D>().linearVelocity.y);
+        float move = Input.GetAxis("Horizontal");
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // Atualizar a velocidade no Rigidbody2D
+        rb.linearVelocity = new Vector2(move * 5f, rb.linearVelocity.y);
+        if (Mathf.Abs(move) > 0.01f)
         {
-            GetComponent<Rigidbody2D>().AddForce(Vector2.up * 300f);
+            anim.SetInteger("transition", 1); // Andando
+        }
+        else
+        {
+            anim.SetInteger("transition", 0); // Parado
+        }
+        if(move > 0)
+        {
+            transform.eulerAngles = new Vector2(0, 0);
+        }if(move < 0)
+        {
+            transform.eulerAngles = new Vector2(0, 180);
+        }
+    }
+
+
+
+    void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && Mathf.Abs(rb.linearVelocity.y) < 0.01f && inGround == true)
+        {
+            rb.AddForce(Vector2.up * 350f);
+            inGround = false;
+            // Atualizar a animação de pulo, se necessário
+            anim.SetTrigger("Jump");
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.name == "Ground")
+        {
+            inGround = true;
         }
     }
 

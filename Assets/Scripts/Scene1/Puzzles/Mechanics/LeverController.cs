@@ -18,9 +18,13 @@ public class LeverController : MonoBehaviour
     public Vector3 originalDoorPosition;
     private DoorStatus doorStatus = DoorStatus.Closed;
     public Vector2 maxDoorOffset;
+    public Sprite leverActiveSprite; // Sprite ativado.
+    public Sprite leverInactiveSprite;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         originalDoorPosition = Door.transform.position;
     }
 
@@ -29,6 +33,8 @@ public class LeverController : MonoBehaviour
         if (isPlayerNearby && Input.GetKeyDown(interactionKey) &&
         (doorStatus == DoorStatus.Closed || doorStatus == DoorStatus.Opened))
         {
+            spriteRenderer.sprite = doorStatus == DoorStatus.Closed ? leverActiveSprite : leverInactiveSprite;
+
             switch (doorStatus)
             {
                 case DoorStatus.Closed:
