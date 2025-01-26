@@ -2365,6 +2365,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[251].second.m_TileSpriteIndex
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6000000000000001, guid: 134220e4ab6b477e8f1c45cf2e8290ba, type: 3}
+      propertyPath: m_UsedByEffector
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2515,7 +2519,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1cbfd917edb7d6947b818e83f2cbe52e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -2689,7 +2693,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1cbfd917edb7d6947b818e83f2cbe52e, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
