@@ -28,7 +28,7 @@ public class LeverX : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         originalDoorPosition = Door.transform.position;
-        interactionCanvas.SetActive(false); // Garantir que o Canvas comece desativado
+        interactionCanvas.SetActive(false);
     }
 
     void Update()
